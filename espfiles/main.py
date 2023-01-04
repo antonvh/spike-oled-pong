@@ -3,7 +3,10 @@ import machine
 from serialtalk.auto import SerialTalk
 
 # Set up the display
-display = ssd1306.SSD1306_I2C(128, 64, machine.SoftI2C(scl=4, sda=5))
+display = ssd1306.SSD1306_I2C(
+    128, 64, 
+    machine.SoftI2C(scl=machine.Pin(4),sda=machine.Pin(5))
+)
 
 # Set up the paddles
 PAD_SIZE = 15
@@ -35,24 +38,27 @@ while True:
     # Auto mode
     pads(ball_y-7, ball_y-7)
 
+    # Check for collisions with the paddles
+    if ball_x < 4:
+        if paddle_a_y < ball_y < paddle_a_y + PAD_SIZE:
+            ball_dx *= -1
+    elif ball_x > 119:
+        if paddle_b_y < ball_y < paddle_b_y + PAD_SIZE:
+            ball_dx *= -1
+
     # Update the ball
     ball_x += ball_dx
     ball_y += ball_dy
 
-    # Check for collisions with the paddles
-    if ball_x < 10:
-        if paddle_a_y < ball_y < paddle_a_y + PAD_SIZE:
-            ball_dx *= -1
-    elif ball_x > 122:
-        if paddle_b_y < ball_y < paddle_b_y + PAD_SIZE:
-            ball_dx *= -1
-
     # Check for collisions with the walls
-    if ball_y < 0 or ball_y > 64:
+    if ball_y < 0 or ball_y > 61:
         ball_dy *= -1
 
     # Clear the display
     display.fill(0)
+
+    # Draw the score
+    display.text("{}:{}".format(*score), 64-10, 0)
 
     # Draw the paddles
     display.rect(0, paddle_a_y, 5, PAD_SIZE, 1)

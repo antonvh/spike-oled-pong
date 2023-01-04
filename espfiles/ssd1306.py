@@ -104,7 +104,7 @@ class SSD1306:
 
     def rect(self, x, y, w, h, c=1, fill=True):
         if fill:
-            self.framebug.fillrect(x, y, w, h, c)
+            self.framebuf.fill_rect(x, y, w, h, c)
         else:
             self.framebuf.rect(x, y, w, h, c)
 
