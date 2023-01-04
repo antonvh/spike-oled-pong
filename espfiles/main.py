@@ -32,21 +32,36 @@ def reset_score():
     score = [0,0]
 reset_score()
 
+st = SerialTalk()
+st.add_command(pads)
+st.add_command(reset_score)
+
 # Main game loop
 while True:
     # Update the paddles
-    # Auto mode
-    pads(ball_y-7, ball_y-7)
+    # Auto mode update
+    # pads(ball_y-7, ball_y-7)
 
-    # Check for collisions with the paddles
+    # SerialTalk mode, overwrite pads position when available
+    st.process_uart()
+
+    # Check for collisions with the paddles.
     if ball_x < 4:
-        if paddle_a_y < ball_y < paddle_a_y + PAD_SIZE:
+        if paddle_a_y-3 < ball_y < paddle_a_y + PAD_SIZE:
             ball_dx *= -1
+        else:
+            score[1] += 1
+            reset_ball()
     elif ball_x > 119:
-        if paddle_b_y < ball_y < paddle_b_y + PAD_SIZE:
+        if paddle_b_y-3 < ball_y < paddle_b_y + PAD_SIZE:
             ball_dx *= -1
+        else:
+            score[0] += 1
+            reset_ball()
 
     # Update the ball
+    ball_dx *= 1.0001
+    ball_dy *= 1.0001
     ball_x += ball_dx
     ball_y += ball_dy
 
@@ -65,7 +80,7 @@ while True:
     display.rect(122, paddle_b_y, 5, PAD_SIZE, 1)
 
     # Draw the ball
-    display.rect(ball_x, ball_y, 3, 3, 1)
+    display.rect(round(ball_x), round(ball_y), 3, 3, 1)
 
     # Update the display
     display.show()
