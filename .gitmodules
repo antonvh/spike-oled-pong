@@ -1,0 +1,3 @@
+[submodule "SerialTalk"]
+	path = SerialTalk
+	url = https://github.com/antonvh/SerialTalk
