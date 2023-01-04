@@ -12,8 +12,8 @@ display = ssd1306.SSD1306_I2C(
 PAD_SIZE = 15
 def pads(a, b):
     global paddle_a_y, paddle_b_y
-    paddle_a_y = max(0, min(a, 64 - PAD_SIZE))
-    paddle_b_y = max(0, min(b, 64 - PAD_SIZE))
+    paddle_a_y = round(max(0, min(a, 64 - PAD_SIZE)))
+    paddle_b_y = round(max(0, min(b, 64 - PAD_SIZE)))
 pads(0,0)
 
 # Set up the ball
@@ -60,8 +60,8 @@ while True:
             reset_ball()
 
     # Update the ball
-    ball_dx *= 1.0001
-    ball_dy *= 1.0001
+    ball_dx *= 1.001
+    ball_dy *= 1.001
     ball_x += ball_dx
     ball_y += ball_dy
 
